@@ -1,6 +1,7 @@
 var database, dog, happyDog, dogImg, happyDogImg;
 var foodS, foodStock;
 var lastFed,fedTime;
+var feedDog;
 var foodObj;
 
 function preload()
@@ -12,9 +13,9 @@ function preload()
 function setup() {
   database = firebase.database();
   console.log(database);
-  createCanvas(500, 500);
+  createCanvas(800, 500);
 
-  dog = createSprite(250,250,10,10);
+  dog = createSprite(650,250,10,10);
   dog.addImage(dogImg);
   dog.scale=0.5;
   foodStock=database.ref('Food');
@@ -28,6 +29,8 @@ function setup() {
   addFood.position(800,95);
   addFood.mousePressed(addFoods);
   
+  food= new Food();
+
   fedTime=database.ref('FeedTime');
   fedTime.on("value",function(data){
     lastFed=data.val();
@@ -40,6 +43,7 @@ function draw() {
   background(46,139,87);
   
   drawSprites();
+  food.display();
   fill (255,255,254);
   textSize(15);
   if(lastFed>=12){
@@ -47,17 +51,17 @@ function draw() {
   }else if(lastFed==0){
     text("Last Feed : 12 AM",350,30);
   }else{
-    text("Last Feed :"+ lastFed+"AM",350,30)
+    text("Last Feed :"+ lastFed+"AM",350,30);
   }
 
 }
 
-function feddDog(){
+function feedDog(){
   dog.addImage(happyDog);
 
-  foodObj.updateFoodStock(foodObj.GetFoodStock()-1);
+  foodObj.updateFoodStock(foodObj.getFoodStock()-1);
   database.ref('/').update({
-    Food:foodObj.GetFoodStock(),
+    Food:foodObj.getFoodStock(),
     FeedTime:hour ()
   })
 }
